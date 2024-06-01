@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
     port: 3306,
     database: 'tracker_db',
     user: 'root',
-    password: 'Nk47nk73!'
+    password: ''
 });
 
 connection.connect((err) => {
@@ -144,14 +144,14 @@ function addARole() {
             {
                 type: "list",
                 message: "Department for new role:",
-                name: "newDepartment",
+                name: "department",
                 choices: res.map(
-                    (newDepartment) => newDepartment.names
+                    (department) => department.names
                 ),
             },
         ]) .then((answers) => {
-            const newDepartment = res.find(
-                (newDepartment) => newDepartment.name === answers.newDepartment
+            const department = res.find(
+                (department) => department.name === answers.department_id
             );
 
             const query = "INSERT INTO roles SET ?";
@@ -160,12 +160,12 @@ function addARole() {
                 {
                     title: answers.newRole,
                     salary: answers.newSalary,
-                    department_id: newDepartment,
+                    department_id: department.id,
                 },
                 (err, res) => {
                     if (err) throw err;
 
-                    console.log(`Added role ${answers.newRole} with salary ${answers.newSalary} in ${answers.newDepartment}`);
+                    console.log(`Added role ${answers.newRole} with salary ${answers.newSalary} in ${answers.department}`);
 
                     start();
                 }
@@ -175,7 +175,7 @@ function addARole() {
 }
 
 function addAnEmployee() {
-    connection.query("SELECT id, title, FROM roles", (error, results) => {
+    connection.query("SELECT id, title FROM roles", (error, results) => {
         if (error) {
             console.log(error);
             return;
